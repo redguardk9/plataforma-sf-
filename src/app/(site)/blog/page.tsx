@@ -23,6 +23,8 @@ export default async function BlogPage() {
         </p>
       </div>
 
+      {posts.length === 0 && <p className="text-muted">Ainda não há artigos publicados.</p>}
+
       <div className="grid gap-7 sm:grid-cols-2 lg:grid-cols-3">
         {posts.map((p, i) => (
           <Link key={p.id} href={`/blog/${p.slug}`} className="group">
