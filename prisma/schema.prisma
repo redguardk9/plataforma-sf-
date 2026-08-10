@@ -222,3 +222,24 @@ model Ebook {
   payments Payment[]
 }
 
+// ---------------------------------------------------------------------------
+// Supervisão (área reservada) — geríveis a partir do admin
+// ---------------------------------------------------------------------------
+// Linha única com as definições do próximo encontro do grupo de supervisão.
+model SupervisionSettings {
+  id               String    @id @default(cuid())
+  nextSessionAt    DateTime?
+  nextSessionLabel String    @default("Grupo de supervisão")
+  meetingUrl       String?
+}
+
+model SupervisionResource {
+  id          String   @id @default(cuid())
+  type        String   @default("RECORDING") // "RECORDING" | "MATERIAL"
+  title       String
+  description String   @default("")
+  url         String?
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+}
+

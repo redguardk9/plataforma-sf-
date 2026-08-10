@@ -2,6 +2,7 @@ import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { formatPrice, isLive } from "@/lib/constants";
 import { createCourse, toggleCoursePublished, deleteCourse } from "../actions";
+import { ConfirmSubmitButton } from "@/components/ConfirmSubmitButton";
 
 export default async function AdminFormacoes() {
   const courses = await prisma.course.findMany({
@@ -90,7 +91,12 @@ export default async function AdminFormacoes() {
                         <button className="text-xs text-muted hover:text-ink">{c.published ? "Despublicar" : "Publicar"}</button>
                       </form>
                       <form action={deleteCourse.bind(null, c.id)}>
-                        <button className="text-xs text-red-500 hover:text-red-400">Apagar</button>
+                        <ConfirmSubmitButton
+                          confirmMessage={`Apagar a formação "${c.title}"? Esta ação não pode ser desfeita.`}
+                          className="text-xs text-red-500 hover:text-red-400"
+                        >
+                          Apagar
+                        </ConfirmSubmitButton>
                       </form>
                     </div>
                   </td>

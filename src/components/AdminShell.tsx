@@ -14,6 +14,7 @@ const ICONS = {
   card: <><rect x="3" y="6" width="18" height="13" rx="2" /><path d="M3 10h18" /></>,
   users: <><circle cx="9" cy="8" r="3.5" /><path d="M2 20c0-3.5 3-5 7-5s7 1.5 7 5" /><path d="M16 5a3.5 3.5 0 0 1 0 7M22 20c0-3-2-4.5-5-5" /></>,
   doc: <><path d="M6 3h9l4 4v14H6z" /><path d="M9 12h7M9 16h5" /></>,
+  shield: <><path d="M12 3l8 4v6c0 4-3.5 7-8 8-4.5-1-8-4-8-8V7z" /></>,
 } as const;
 
 export function AdminShell({

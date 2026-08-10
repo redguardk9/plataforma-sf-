@@ -13,6 +13,8 @@ async function main() {
   await prisma.post.deleteMany();
   await prisma.episode.deleteMany();
   await prisma.ebook.deleteMany();
+  await prisma.supervisionResource.deleteMany();
+  await prisma.supervisionSettings.deleteMany();
   await prisma.user.deleteMany();
 
   // ---------------- Utilizadores ----------------
@@ -281,6 +283,22 @@ async function main() {
       { slug: "a-escuta-e-o-ato", title: "A Escuta e o Ato", description: "Ensaio sobre a clínica do comportamento desviante.", category: "Ensaio clínico", priceCents: 1400, coverColor: "#1E6FE8" },
       { slug: "o-trauma-que-nao-fala-ebook", title: "O Trauma Que Não Fala", description: "O indizível do trauma e o lugar da palavra.", category: "Ensaio", priceCents: 1200, coverColor: "#B85C36" },
       { slug: "notas-de-primeira-consulta", title: "Notas de Primeira Consulta", description: "Guia prático para o enquadramento inicial.", category: "Guia prático", priceCents: 900, coverColor: "#1559C4" },
+    ],
+  });
+
+  // ---------------- Supervisão ----------------
+  const nextSession = new Date();
+  nextSession.setDate(nextSession.getDate() + ((4 - nextSession.getDay() + 7) % 7 || 7)); // próxima quinta-feira
+  nextSession.setHours(20, 0, 0, 0);
+  await prisma.supervisionSettings.create({
+    data: { nextSessionAt: nextSession, nextSessionLabel: "Grupo de supervisão · 20h00" },
+  });
+  await prisma.supervisionResource.createMany({
+    data: [
+      { type: "RECORDING", title: "Sessão de Julho", description: "A transferência no trabalho institucional.", order: 0 },
+      { type: "MATERIAL", title: "Guião de leitura de caso", description: "Estrutura para apresentar casos ao grupo.", order: 1 },
+      { type: "RECORDING", title: "Sessão de Junho", description: "Acting-out e passagem ao ato — revisão.", order: 2 },
+      { type: "MATERIAL", title: "Bibliografia essencial", description: "Textos de referência da supervisão.", order: 3 },
     ],
   });
 

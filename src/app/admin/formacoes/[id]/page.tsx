@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/guards";
 import { isLive } from "@/lib/constants";
 import { updateCourse, addLesson, deleteLesson } from "../../actions";
+import { ConfirmSubmitButton } from "@/components/ConfirmSubmitButton";
 
 function toLocalInput(d: Date | null): string {
   if (!d) return "";
@@ -147,7 +148,12 @@ export default async function AdminCourseEditor({ params }: { params: Promise<{ 
               <p className="text-[11px] text-faint">{l.durationLabel || "—"}{l.isFree ? " · amostra" : ""}{l.videoUrl ? "" : " · sem vídeo"}</p>
             </div>
             <form action={deleteLesson.bind(null, l.id, course.id)}>
-              <button className="text-xs text-red-500 hover:text-red-400">Apagar</button>
+              <ConfirmSubmitButton
+                confirmMessage={`Apagar a aula "${l.title}"?`}
+                className="text-xs text-red-500 hover:text-red-400"
+              >
+                Apagar
+              </ConfirmSubmitButton>
             </form>
           </div>
         ))}

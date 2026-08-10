@@ -9,6 +9,7 @@ const ITEMS: AdminNavItem[] = [
   { href: "/admin/pagamentos", label: "Pagamentos", icon: "card" },
   { href: "/admin/utilizadores", label: "Utilizadores", icon: "users" },
   { href: "/admin/blog", label: "Blog", icon: "doc" },
+  { href: "/admin/supervisao", label: "Supervisão", icon: "shield" },
 ];
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {

@@ -1,8 +1,12 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { currentUser } from "@/lib/guards";
+import { prisma } from "@/lib/prisma";
+import { formatDateShort, formatDateTime } from "@/lib/constants";
 
 export const metadata: Metadata = { title: "Supervisão" };
+
+const TYPE_LABEL: Record<string, string> = { RECORDING: "Gravação", MATERIAL: "Material" };
 
 // Middleware garante que o utilizador está autenticado.
 // Aqui validamos o acesso específico à supervisão — na BASE DE DADOS.
@@ -29,6 +33,12 @@ export default async function SupervisaoPage() {
     );
   }
 
+  const [settings, resources] = await Promise.all([
+    prisma.supervisionSettings.findFirst(),
+    prisma.supervisionResource.findMany({ orderBy: { order: "asc" } }),
+  ]);
+  const upcoming = settings?.nextSessionAt && settings.nextSessionAt.getTime() > Date.now() ? settings.nextSessionAt : null;
+
   return (
     <div className="mx-auto max-w-[1180px] px-6 py-16">
       <span className="eyebrow">Área reservada · Supervisão</span>
@@ -39,37 +49,46 @@ export default async function SupervisaoPage() {
       </p>
 
       {/* Próximo encontro */}
-      <div className="card p-6 mt-9 flex items-center gap-5 border-brand/30">
-        <div className="w-16 h-16 rounded-xl bg-brand-soft grid place-items-center text-center shrink-0">
-          <div>
-            <div className="text-xl font-semibold text-glow leading-none">01</div>
-            <div className="font-mono text-[9px] uppercase text-muted mt-1">AGO</div>
+      {upcoming && (
+        <div className="card p-6 mt-9 flex items-center gap-5 border-brand/30 flex-wrap">
+          <div className="w-16 h-16 rounded-xl bg-brand-soft grid place-items-center text-center shrink-0">
+            <div className="text-sm font-semibold text-glow leading-none">{formatDateShort(upcoming)}</div>
           </div>
+          <div className="flex-1 min-w-[200px]">
+            <div className="font-mono text-[10px] uppercase tracking-wider text-glow">Próximo encontro</div>
+            <div className="text-lg font-semibold">{settings?.nextSessionLabel}</div>
+            <p className="text-sm text-muted">{formatDateTime(upcoming)}</p>
+          </div>
+          {settings?.meetingUrl && (
+            <a href={settings.meetingUrl} target="_blank" rel="noopener noreferrer" className="btn btn-primary">Entrar na sala</a>
+          )}
         </div>
-        <div className="flex-1">
-          <div className="font-mono text-[10px] uppercase tracking-wider text-glow">Próximo encontro</div>
-          <div className="text-lg font-semibold">Grupo de supervisão · 20h00</div>
-          <p className="text-sm text-muted">Online · traga um caso para pensarmos em conjunto.</p>
-        </div>
-        <button className="btn btn-primary hidden sm:inline-flex">Entrar na sala</button>
-      </div>
+      )}
 
       {/* Conteúdos */}
-      <div className="grid gap-5 md:grid-cols-3 mt-6">
-        <ResourceCard type="Gravação" title="Sessão de Julho" desc="A transferência no trabalho institucional." icon="play" />
-        <ResourceCard type="Material" title="Guião de leitura de caso" desc="Estrutura para apresentar casos ao grupo." icon="doc" />
-        <ResourceCard type="Gravação" title="Sessão de Junho" desc="Acting-out e passagem ao ato — revisão." icon="play" />
-        <ResourceCard type="Material" title="Bibliografia essencial" desc="Textos de referência da supervisão." icon="doc" />
-        <ResourceCard type="Gravação" title="Sessão de Maio" desc="O silêncio como intervenção." icon="play" />
-        <ResourceCard type="Material" title="Modelo de notas clínicas" desc="Template para registo de sessões." icon="doc" />
-      </div>
+      {resources.length === 0 ? (
+        <p className="text-muted mt-9">Ainda não há gravações nem materiais publicados aqui.</p>
+      ) : (
+        <div className="grid gap-5 md:grid-cols-3 mt-9">
+          {resources.map((r) => (
+            <ResourceCard
+              key={r.id}
+              type={TYPE_LABEL[r.type] ?? r.type}
+              title={r.title}
+              desc={r.description}
+              url={r.url}
+              icon={r.type === "RECORDING" ? "play" : "doc"}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 }
 
-function ResourceCard({ type, title, desc, icon }: { type: string; title: string; desc: string; icon: "play" | "doc" }) {
-  return (
-    <div className="card card-hover p-5">
+function ResourceCard({ type, title, desc, icon, url }: { type: string; title: string; desc: string; icon: "play" | "doc"; url?: string | null }) {
+  const content = (
+    <>
       <div className="flex items-center gap-3 mb-3">
         <div className="w-9 h-9 rounded-lg bg-brand-soft text-glow grid place-items-center">
           {icon === "play" ? (
@@ -81,7 +100,15 @@ function ResourceCard({ type, title, desc, icon }: { type: string; title: string
         <span className="font-mono text-[10px] uppercase tracking-wider text-faint">{type}</span>
       </div>
       <h3 className="font-semibold">{title}</h3>
-      <p className="text-sm text-muted mt-1">{desc}</p>
-    </div>
+      {desc && <p className="text-sm text-muted mt-1">{desc}</p>}
+    </>
   );
+  if (url) {
+    return (
+      <a href={url} target="_blank" rel="noopener noreferrer" className="card card-hover p-5 block">
+        {content}
+      </a>
+    );
+  }
+  return <div className="card p-5">{content}</div>;
 }

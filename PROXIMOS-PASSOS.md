@@ -2,7 +2,9 @@
 
 > Runbook para retomar numa próxima sessão. Estado a 2026‑08‑10.
 > Domínio de publicação escolhido: **sergiofonsecapsi.com**
-> ✅ Passo 1 (link Google Calendar) e passo 2 (Supabase) já feitos — ver abaixo. Próximo: passo 3 (Vercel).
+> ✅ Todos os 5 passos feitos — site publicado e no ar em https://sergiofonsecapsi.com.
+> Repo: github.com/redguardk9/plataforma-sf- · Deploy: Vercel (conta Miguel Fonseca) · BD: Supabase (projeto plataforma-sf).
+> Falta apenas o item opcional do Resend (envio de emails) — ver passo 5.
 
 ---
 
@@ -15,11 +17,13 @@
 - Marcação **agora é pela agenda do Google** (sistema interno de marcação foi removido).
 - Build de produção limpo (27 rotas), typecheck 0 erros, sem bugs conhecidos.
 
-## Contas de teste (locais)
+## Contas de teste (locais — SQLite, `npm run seed`)
 | Papel | Email | Password |
 |---|---|---|
 | Admin | `admin@sergiofonseca.pt` | `admin123` |
 | Formando | `ana@exemplo.pt` | `user123` |
+
+⚠️ Em **produção** o admin tem email/password diferentes (trocados no passo 5) — pedir ao Sérgio, não estão neste ficheiro.
 
 ## Comandos úteis
 ```bash
@@ -42,17 +46,17 @@ Projeto `plataforma-sf` criado (região Ireland/West EU). `schema.prisma` em `po
 com `directUrl`. `.env` com `DATABASE_URL` (pooler 6543) e `DIRECT_URL` (direct 5432).
 `db:push` + `seed` correram sem erros (2 users, 6 courses, 3 posts confirmados). `build` limpo.
 
-## 3) Deploy na Vercel
-1. `git push` do repositório para o GitHub.
-2. **vercel.com** → Import do repositório.
-3. **Environment Variables** (Production):
-   - `DATABASE_URL` (pooled do Supabase)
-   - `DIRECT_URL` (direct do Supabase)
-   - `AUTH_SECRET` → **gerar novo**: `openssl rand -base64 33`
-   - `AUTH_URL` = `https://sergiofonsecapsi.com`
-   - `AUTH_TRUST_HOST` = `true`
-   - (opcional) `RESEND_API_KEY`, `MAIL_FROM`, `MAIL_ADMIN`
-4. Deploy. (Já existe `postinstall: prisma generate` no `package.json`.)
+## 3) ✅ Deploy na Vercel — feito
+Repo enviado para `github.com/redguardk9/plataforma-sf-`. Projeto importado na Vercel
+(conta "Miguel Fonseca", plano Hobby). Environment Variables (Production) configuradas:
+`DATABASE_URL`, `DIRECT_URL`, `AUTH_SECRET` (novo, gerado com `openssl rand -base64 33`),
+`AUTH_URL` (temporariamente `https://plataforma-sf.vercel.app` — atualizar para
+`https://sergiofonsecapsi.com` no passo 4), `AUTH_TRUST_HOST=true`, `MAIL_ADMIN`, `MAIL_FROM`.
+Deployment "Ready", site a funcionar em https://plataforma-sf.vercel.app.
+
+⚠️ Cuidado ao editar env vars na Vercel com a tradução automática do Chrome ativa — ela
+mistura os nomes das variáveis (ex.: `AUTH_URL` → `URL_AUTH`). Desligar tradução na página
+antes de criar/editar variáveis.
 
 ## 4) Ligar o domínio sergiofonsecapsi.com  (DNS na Hostinger)
 > O domínio está na **Hostinger** (hoje a servir o site antigo Zyrosite — publicar substitui-o).
@@ -63,9 +67,9 @@ com `directUrl`. `.env` com `DATABASE_URL` (pooler 6543) e `DIRECT_URL` (direct 
 3. SSL é automático na Vercel. Propagação: minutos a algumas horas.
 
 ## 5) Segurança antes/depois de publicar
-- Trocar a password do admin `admin123` (e idealmente o email do admin no seed).
-- `AUTH_SECRET` novo em produção (feito no passo 3).
-- Emails: verificar o domínio `sergiofonsecapsi.com` no **Resend** e pôr `MAIL_FROM="Sérgio Fonseca <ola@sergiofonsecapsi.com>"` (senão, `onboarding@resend.dev` só envia para o email da conta Resend).
+- ✅ Password do admin trocada em produção (já não é `admin123`) e email atualizado para `sergiofonseca.psic@gmail.com`. (Nota: a password de produção é parecida com a da BD do Supabase — ideal seria trocar por algo sem ligação entre as duas, mas ficou por decisão do Sérgio.)
+- ✅ `AUTH_SECRET` novo em produção (feito no passo 3).
+- ⏳ Emails: verificar o domínio `sergiofonsecapsi.com` no **Resend** e pôr `MAIL_FROM="Sérgio Fonseca <ola@sergiofonsecapsi.com>"` (opcional — sem isto o site funciona, só não envia emails de confirmação/aviso).
 
 ---
 

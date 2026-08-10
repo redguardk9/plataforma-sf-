@@ -221,3 +221,47 @@ export async function togglePostPublished(id: string) {
   revalidatePath("/blog");
 }
 
+// ---------- Supervisão ----------
+export async function updateSupervisionSettings(formData: FormData) {
+  await requireAdmin();
+  const dateRaw = String(formData.get("nextSessionAt") ?? "");
+  const existing = await prisma.supervisionSettings.findFirst();
+  const data = {
+    nextSessionAt: dateRaw ? new Date(dateRaw) : null,
+    nextSessionLabel: String(formData.get("nextSessionLabel") ?? "").trim() || "Grupo de supervisão",
+    meetingUrl: String(formData.get("meetingUrl") ?? "").trim() || null,
+  };
+  if (existing) {
+    await prisma.supervisionSettings.update({ where: { id: existing.id }, data });
+  } else {
+    await prisma.supervisionSettings.create({ data });
+  }
+  revalidatePath("/admin/supervisao");
+  revalidatePath("/supervisao");
+}
+
+export async function createSupervisionResource(formData: FormData) {
+  await requireAdmin();
+  const title = String(formData.get("title") ?? "").trim();
+  if (!title) return;
+  const count = await prisma.supervisionResource.count();
+  await prisma.supervisionResource.create({
+    data: {
+      type: String(formData.get("type") ?? "RECORDING"),
+      title,
+      description: String(formData.get("description") ?? "").trim(),
+      url: String(formData.get("url") ?? "").trim() || null,
+      order: count,
+    },
+  });
+  revalidatePath("/admin/supervisao");
+  revalidatePath("/supervisao");
+}
+
+export async function deleteSupervisionResource(id: string) {
+  await requireAdmin();
+  await prisma.supervisionResource.delete({ where: { id } });
+  revalidatePath("/admin/supervisao");
+  revalidatePath("/supervisao");
+}
+
