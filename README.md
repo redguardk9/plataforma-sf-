@@ -1,36 +1,55 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Plataforma Sérgio Fonseca · Psicologia
 
-## Getting Started
+Plataforma de formação clínica, supervisão, podcast e ebooks.
+Next.js 16 · React 19 · TypeScript · Tailwind v4 · Prisma (SQLite) · Auth.js v5.
 
-First, run the development server:
+## Arrancar em desenvolvimento
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run db:push     # cria a base de dados SQLite a partir do schema
+npm run seed        # insere dados de exemplo + contas
+npm run dev         # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Contas de exemplo (do seed)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+| Papel      | Email                        | Palavra-passe |
+| ---------- | ---------------------------- | ------------- |
+| Admin      | `admin@sergiofonseca.pt`     | `admin123`    |
+| Formando   | `ana@exemplo.pt`             | `user123`     |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+> Altere estas credenciais antes de publicar.
 
-## Learn More
+## Estrutura
 
-To learn more about Next.js, take a look at the following resources:
+- `src/app/(site)/` — site público (início, formações, ficha, supervisão, podcast, loja, blog)
+- `src/app/conta/` — área do formando (protegida)
+- `src/app/admin/` — painel de administração (só ADMIN)
+- `src/app/login`, `src/app/registar` — autenticação
+- `src/auth.ts`, `src/auth.config.ts`, `src/proxy.ts` — Auth.js + proteção de rotas
+- `prisma/schema.prisma` — modelo de dados
+- `prisma/seed.ts` — dados de exemplo
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Papéis e acessos
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- **USER** — área pessoal, formações, compras.
+- **ADMIN** — tudo do USER + painel de administração.
+- **Acesso à supervisão** — flag por utilizador (`supervisionAccess`), gerível no admin.
 
-## Deploy on Vercel
+## Comandos úteis
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+npm run db:reset       # recria a base de dados e volta a semear
+npx prisma studio      # explorador visual da base de dados
+npm run build          # build de produção
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Por ligar na fase seguinte (produção)
+
+- **Pagamentos reais** — Stripe (Multibanco / MB Way). Já existe o modelo `Payment`;
+  falta ligar o checkout e o webhook que marca `PAID`.
+- **Alojamento de vídeo/áudio** — formações e podcast (ex.: Mux, Bunny, Cloudflare Stream).
+- **Base de dados de produção** — trocar SQLite por PostgreSQL (Neon/Supabase): muda-se
+  o `provider` e o `DATABASE_URL`.
+- **Envio de emails** — confirmações de compra e inscrição (ex.: Resend).

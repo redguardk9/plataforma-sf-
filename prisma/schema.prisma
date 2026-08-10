@@ -1,0 +1,224 @@
+// Base de dados da plataforma Sérgio Fonseca · Psicologia
+// PostgreSQL (Supabase) em produção.
+// Nota: mantemos String + constantes em vez de enums nativos (herdado do SQLite em dev).
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// ---------------------------------------------------------------------------
+// Utilizadores e acessos
+// ---------------------------------------------------------------------------
+model User {
+  id               String   @id @default(cuid())
+  name             String
+  email            String   @unique
+  passwordHash     String
+  role             String   @default("USER") // "USER" | "ADMIN"
+  supervisionAccess Boolean @default(false)  // acesso à área de supervisão
+  image            String?
+  bio              String?
+  createdAt        DateTime @default(now())
+
+  enrollments    Enrollment[]
+  payments       Payment[]
+  messages       Message[]
+  posts          Post[]
+  lessonProgress LessonProgress[]
+}
+
+// ---------------------------------------------------------------------------
+// Formações (gravadas e em direto)
+// ---------------------------------------------------------------------------
+model Course {
+  id            String   @id @default(cuid())
+  slug          String   @unique
+  title         String
+  subtitle      String
+  description   String
+  type          String   @default("RECORDED") // "RECORDED" | "LIVE"
+  level         String   @default("Todos os níveis")
+  priceCents    Int      @default(0)
+  durationLabel String   @default("")
+  coverColor    String   @default("#1E6FE8")
+  rating        Float    @default(5.0)
+  studentsCount Int      @default(0)
+  published     Boolean  @default(true)
+  featured      Boolean  @default(false)
+
+  // Link externo de inscrição/compra (Automarte ou Google Form) e texto do botão
+  enrollUrl     String?
+  enrollLabel   String?
+
+  // Campos específicos de formação em direto
+  startAt       DateTime?
+  sessionsLabel String?
+  seatsTotal    Int?
+  seatsTaken    Int      @default(0)
+
+  createdAt     DateTime @default(now())
+
+  modules     Module[]
+  lessons     Lesson[]
+  enrollments Enrollment[]
+  payments    Payment[]
+  messages    Message[]
+}
+
+model Module {
+  id          String @id @default(cuid())
+  courseId    String
+  order       Int
+  section     String // ex: "Módulo 1"
+  title       String
+  description String
+  course      Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@index([courseId])
+}
+
+// ---------------------------------------------------------------------------
+// Aulas (conteúdo real das formações) e progresso
+// ---------------------------------------------------------------------------
+model Lesson {
+  id            String  @id @default(cuid())
+  courseId      String
+  order         Int
+  title         String
+  description   String?
+  videoUrl      String? // URL de embed (YouTube/Vimeo) ou ficheiro
+  durationLabel String  @default("")
+  isFree        Boolean @default(false) // amostra visível sem inscrição
+
+  course    Course           @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  progress  LessonProgress[]
+
+  @@index([courseId])
+}
+
+model LessonProgress {
+  id        String   @id @default(cuid())
+  userId    String
+  lessonId  String
+  completed Boolean  @default(false)
+  updatedAt DateTime @updatedAt
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  lesson Lesson @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, lessonId])
+  @@index([userId])
+}
+
+model Enrollment {
+  id        String   @id @default(cuid())
+  userId    String
+  courseId  String
+  status    String   @default("ACTIVE") // "ACTIVE" | "PENDING"
+  progress  Int      @default(0)        // 0-100
+  createdAt DateTime @default(now())
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, courseId])
+  @@index([courseId])
+}
+
+// ---------------------------------------------------------------------------
+// Chat de dúvidas por formação
+// ---------------------------------------------------------------------------
+model Message {
+  id        String   @id @default(cuid())
+  courseId  String
+  userId    String
+  body      String
+  createdAt DateTime @default(now())
+
+  course Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([courseId])
+}
+
+// ---------------------------------------------------------------------------
+// Pagamentos (compras de formações e ebooks)
+// ---------------------------------------------------------------------------
+model Payment {
+  id         String   @id @default(cuid())
+  userId     String
+  courseId   String?
+  ebookId    String?
+  amountCents Int
+  currency   String   @default("EUR")
+  status     String   @default("PENDING") // "PENDING" | "PAID" | "FAILED" | "REFUNDED"
+  method     String   @default("card")    // "card" | "multibanco" | "mbway"
+  provider   String   @default("stripe")
+  reference  String?
+  createdAt  DateTime @default(now())
+
+  user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course Course? @relation(fields: [courseId], references: [id], onDelete: SetNull)
+  ebook  Ebook?  @relation(fields: [ebookId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+}
+
+// ---------------------------------------------------------------------------
+// Blog
+// ---------------------------------------------------------------------------
+model Post {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  title       String
+  excerpt     String
+  content     String
+  category    String   @default("Clínica")
+  coverColor  String   @default("#1E6FE8")
+  readMinutes Int      @default(5)
+  published   Boolean  @default(true)
+  publishedAt DateTime @default(now())
+  authorId    String?
+
+  author User? @relation(fields: [authorId], references: [id], onDelete: SetNull)
+}
+
+// ---------------------------------------------------------------------------
+// Podcast
+// ---------------------------------------------------------------------------
+model Episode {
+  id            String   @id @default(cuid())
+  slug          String   @unique
+  number        Int
+  title         String
+  description   String
+  durationLabel String   @default("")
+  audioUrl      String?
+  published     Boolean  @default(true)
+  publishedAt   DateTime @default(now())
+}
+
+// ---------------------------------------------------------------------------
+// Ebooks
+// ---------------------------------------------------------------------------
+model Ebook {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  title       String
+  description String
+  category    String   @default("Ensaio")
+  priceCents  Int      @default(0)
+  coverColor  String   @default("#1E6FE8")
+  fileUrl     String?
+  published   Boolean  @default(true)
+  createdAt   DateTime @default(now())
+
+  payments Payment[]
+}
+
