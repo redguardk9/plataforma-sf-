@@ -19,7 +19,7 @@ export function Footer() {
             </div>
             <p className="text-muted text-sm mt-4 max-w-[34ch]">
               Psicólogo especialista em Psicologia Clínica e da Saúde. Trauma complexo, luto,
-              supervisão e formação — com profundidade e ética.
+              perturbação de personalidade borderline, supervisão e formação — com profundidade e ética.
             </p>
           </div>
 

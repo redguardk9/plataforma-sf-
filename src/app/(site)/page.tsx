@@ -58,7 +58,7 @@ export default async function HomePage() {
               </div>
               <div className="text-left">
                 <div className="text-brand text-sm leading-none tracking-wide">★★★★★</div>
-                <div className="text-[13px] text-muted mt-1">+400 pessoas acompanhadas</div>
+                <div className="text-[13px] text-muted mt-1">+300 pessoas acompanhadas</div>
               </div>
             </div>
           </div>

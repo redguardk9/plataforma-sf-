@@ -23,7 +23,7 @@ export const PHILOSOPHY =
 // ------------------------------------------------------------------
 export const ABOUT = {
   intro: [
-    "Sou psicólogo especialista em Psicologia Clínica e da Saúde, com dedicação profunda à intervenção em Trauma Complexo, Dissociação Estrutural, Luto, Ideação Suicida e Perturbação de Personalidade Borderline.",
+    "Sou psicólogo especialista em Psicologia Clínica e da Saúde, com dedicação profunda à intervenção em Trauma Complexo, Comportamentos Aditivos, Luto, Ideação Suicida e Perturbação de Personalidade Borderline.",
     "Mas antes de escutar em consultório, escutei a dor onde ela mais grita: fui maquinista de comboios durante quase trinta anos. Nesse percurso, vivi de frente a brutalidade do sofrimento humano, testemunhei doze acidentes, oito deles fatais. Sobre os trilhos, aprendi o que nenhum livro ensina — a presença silenciosa, a impotência radical, o peso da perda sem palavras.",
     "É desse lugar que nasce o meu modo de estar na clínica: uma escuta sem pressa, que não julga nem tenta corrigir, apenas sustenta. Uma escuta que não procura «curar», mas compreender. Porque, às vezes, o verdadeiro cuidado começa quando alguém permanece contigo no sítio onde ninguém quis ficar.",
   ],
@@ -46,6 +46,7 @@ export const ABOUT = {
     ["Psicologia da Crise", "Intervenção em situações críticas e ruturas súbitas. Competências para lidar com estados de emergência psíquica, colapsos identitários e sofrimento agudo."],
     ["Neuropsicologia Clínica", "Especialização avançada: da avaliação à reabilitação. Integração de avaliação e intervenção para reorganizar padrões de funcionamento cerebral e psicológico."],
     ["Redução de Riscos", "Pós-graduação em redução de riscos associada ao uso de drogas e ao trabalho sexual — intervenção psicossocial junto de populações vulneráveis."],
+    ["Terapia Focada nos Esquemas", "Abordagem integrativa centrada nos esquemas mal-adaptativos precoces — trabalha padrões emocionais e relacionais enraizados, para lá do sintoma imediato."],
   ],
 };
 
@@ -71,14 +72,14 @@ export type Service = {
 export const SERVICES: Service[] = [
   {
     slug: "consultas",
-    title: "Consultas Online ou Presencial",
+    title: "Consultas Online",
     short: "Acolho cada pessoa como um sujeito único. Tempo, escuta e presença para compreender o teu sofrimento e reconstruir sentido.",
     tagline: "Uma consulta não é um ato técnico, é um encontro humano.",
     price: "70€",
     duration: "Sessão individual",
-    format: "Online ou presencial",
+    format: "Online",
     intro: [
-      "Presencial ou online, o que ofereço é tempo, escuta e presença. Aqui, não há pressa nem fórmulas — há um espaço seguro onde a tua dor pode ser dita, e o teu caminho, escutado.",
+      "Online, o que ofereço é tempo, escuta e presença. Aqui, não há pressa nem fórmulas — há um espaço seguro onde a tua dor pode ser dita, e o teu caminho, escutado.",
       "Trabalho com clareza, profundidade e rigor em Trauma Complexo, Dissociação, Luto, Ideação Suicida e Perturbação de Personalidade Borderline — ajudando-te a compreender o teu sofrimento, a tomar decisões conscientes e a reconstruir sentido.",
     ],
     bulletsTitle: "Quando procurar apoio?",
@@ -94,8 +95,8 @@ export const SERVICES: Service[] = [
   },
   {
     slug: "supervisao-clinica",
-    title: "Supervisão Clínica Profunda",
-    short: "Menos frequência. Mais profundidade. Uma supervisão para psicólogos que não querem ficar na superfície.",
+    title: "Supervisão Clínica Avançada",
+    short: "Pensamento clínico e crítico. Mais profundidade. Uma supervisão para psicólogos que não querem ficar na superfície.",
     tagline: "A profundidade está no modo como se pensa, não na frequência com que se reúne.",
     price: "Lista de espera",
     priceNote: "Vagas atualmente indisponíveis",
@@ -119,7 +120,7 @@ export const SERVICES: Service[] = [
     title: "Consultoria Avançada por Sessão Única",
     short: "Uma sessão. Uma leitura clínica. Um novo rumo. Para momentos em que o tempo emocional não pode esperar.",
     tagline: "Clareza clínica, rigor psicológico e orientação estratégica.",
-    price: "120€",
+    price: "100€",
     priceNote: "pagamento antecipado",
     duration: "90 minutos",
     format: "Online (via Meet) ou presencial",

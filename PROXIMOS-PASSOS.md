@@ -5,6 +5,7 @@
 > ✅ Todos os 5 passos feitos — site publicado e no ar em https://sergiofonsecapsi.com.
 > Repo: github.com/redguardk9/plataforma-sf- · Deploy: Vercel (conta Miguel Fonseca) · BD: Supabase (projeto plataforma-sf).
 > Falta apenas o item opcional do Resend (envio de emails) — ver passo 5.
+> ✅ Painel de admin revisto (10/08): secção nova "Supervisão" geríve, confirmação antes de apagar, e os dados de exemplo (formações/blog/podcast/ebooks/conta de teste fictícios) foram removidos da produção. O site está agora vazio de propósito — o Sérgio insere as formações e artigos reais pelo admin.
 
 ---
 
