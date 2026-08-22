@@ -10,7 +10,6 @@ import { SERVICES, CONTACT, TESTIMONIALS } from "@/lib/site";
 const CREDENTIALS = [
   "Psicólogo Especialista · OPP",
   "Mestre em Comportamento Desviante",
-  "Investigador em Trauma Ferroviário",
   "Psicologia da Crise",
 ];
 
