@@ -98,13 +98,12 @@ export const SERVICES: Service[] = [
     title: "Supervisão Clínica Avançada",
     short: "Pensamento clínico e crítico. Mais profundidade. Uma supervisão para psicólogos que não querem ficar na superfície.",
     tagline: "A profundidade está no modo como se pensa, não na frequência com que se reúne.",
-    price: "Lista de espera",
-    priceNote: "Vagas atualmente indisponíveis",
-    duration: "90 minutos",
-    format: "Semanal, quinzenal ou mensal · online ou presencial",
+    price: "50€",
+    duration: "60 minutos",
+    format: "Semanal, quinzenal ou mensal · online",
     intro: [
       "Um espaço quinzenal ou mensal de reflexão técnica, análise clínica e desenvolvimento profissional centrado na prática real do psicólogo.",
-      "Foi desenhada para profissionais que desejam ir além da validação superficial — e que reconhecem que a supervisão é um instrumento terapêutico para o próprio terapeuta. Cada sessão funciona como uma leitura estratégica da tua forma de estar em clínica: decisões, relação com casos, impasses, vícios, intuições, transferências e silêncios.",
+      "Foi desenhada para profissionais que desejam ir além da validação superficial, e que reconhecem que a supervisão é um instrumento terapêutico para o próprio terapeuta. Cada sessão funciona como uma leitura estratégica da tua forma de estar em clínica: decisões, relação com casos, impasses, vícios, intuições, transferências e silêncios.",
     ],
     bulletsTitle: "O que torna esta supervisão diferente?",
     bullets: [
@@ -113,7 +112,7 @@ export const SERVICES: Service[] = [
       "Integra trauma, esquemas, narrativa, contra-transferência e psicanálise relacional.",
       "Cada sessão é construída a partir do que o teu estilo clínico precisa.",
     ],
-    cta: "lista",
+    cta: "agendar",
   },
   {
     slug: "consultoria",
